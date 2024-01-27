@@ -7,14 +7,14 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	clients2 "github.com/jjamieson1/eden-sdk/clients"
+	clients "github.com/jjamieson1/eden-sdk/clients"
 	"github.com/jjamieson1/eden-sdk/models"
 )
 
 func GetProvidersForTenantByType(tenantId, providerType string) ([]models.TenantProvider, error) {
 	url := "http://127.0.0.1:9001/api/tenant/provider/" + providerType + "/" + tenantId
 	method := "GET"
-	body, _, err := clients2.CallRestEndPoint(url, method, tenantId, nil)
+	body, _, err := clients.CallRestEndPoint(url, method, tenantId, nil)
 
 	var tenantProvider []models.TenantProvider
 	json.Unmarshal(body, &tenantProvider)
@@ -29,7 +29,7 @@ func GetProvidersForTenantByType(tenantId, providerType string) ([]models.Tenant
 func GetProvidersType(providerType string) ([]models.EdenAdapter, error) {
 	url := "http://127.0.0.1:9001/api/tenant/provider/type/" + providerType
 	method := "GET"
-	body, _, err := clients2.CallRestEndPoint(url, method, providerType, nil)
+	body, _, err := clients.CallRestEndPoint(url, method, providerType, nil)
 
 	var tenantProvider []models.EdenAdapter
 	json.Unmarshal(body, &tenantProvider)
@@ -80,7 +80,7 @@ func GetTenantByUrl(url string) (models.Tenant, error) {
 
 func GetTenantDetails(tenantId string) (models.Tenant, error) {
 	var tenant models.Tenant
-	tenantServiceUrl := "http://127.0.0.1:9001/api/tenant/details/" + tenantId
+	tenantServiceUrl := "http://127.0.0.1:9001/api/v1/tenant/tenants/" + tenantId
 
 	method := "GET"
 
@@ -148,7 +148,7 @@ func GetUserServiceProvider(tenantId string) ([]models.TenantProvider, error) {
 func GetTenantTypes(tenantId string) ([]models.TenantType, error) {
 	url := "http://127.0.0.1:9001/api/tenant/type/"
 	method := "GET"
-	body, _, err := clients2.CallRestEndPoint(url, method, tenantId, nil)
+	body, _, err := clients.CallRestEndPoint(url, method, tenantId, nil)
 
 	var tenantTypes []models.TenantType
 	json.Unmarshal(body, &tenantTypes)
@@ -159,7 +159,7 @@ func GetTenantTypes(tenantId string) ([]models.TenantType, error) {
 func GetTenantChildren(tenantId string) ([]models.Tenant, error) {
 	url := "http://127.0.0.1:9001/api/tenant/children/" + tenantId
 	method := "GET"
-	body, _, err := clients2.CallRestEndPoint(url, method, tenantId, nil)
+	body, _, err := clients.CallRestEndPoint(url, method, tenantId, nil)
 
 	var tenant []models.Tenant
 	json.Unmarshal(body, &tenant)
@@ -170,7 +170,7 @@ func GetTenantChildren(tenantId string) ([]models.Tenant, error) {
 func GetTenants(tenantId string) ([]models.Tenant, error) {
 	url := "http://127.0.0.1:9001/api/tenants"
 	method := "GET"
-	body, _, err := clients2.CallRestEndPoint(url, method, tenantId, nil)
+	body, _, err := clients.CallRestEndPoint(url, method, tenantId, nil)
 
 	var tenant []models.Tenant
 	json.Unmarshal(body, &tenant)
@@ -182,7 +182,7 @@ func AddOrganizationType(orgType models.TenantType) (models.TenantType, error) {
 	url := "http://127.0.0.1:9001/api/tenant/type/"
 	method := "POST"
 	p, _ := json.Marshal(orgType)
-	body, _, err := clients2.CallRestEndPoint(url, method, orgType.TenantId, p)
+	body, _, err := clients.CallRestEndPoint(url, method, orgType.TenantId, p)
 
 	var r models.TenantType
 	json.Unmarshal(body, &r)
@@ -193,7 +193,7 @@ func AddOrganization(org models.Tenant) (models.Tenant, error) {
 	url := "http://127.0.0.1:9001/api/tenant/details"
 	method := "POST"
 	p, _ := json.Marshal(org)
-	body, _, err := clients2.CallRestEndPoint(url, method, org.TenantId, p)
+	body, _, err := clients.CallRestEndPoint(url, method, org.TenantId, p)
 
 	var r models.Tenant
 	json.Unmarshal(body, &r)
@@ -204,7 +204,7 @@ func UpdateOrganization(org models.Tenant) (models.Tenant, error) {
 	url := "http://127.0.0.1:9001/api/tenant/details/" + org.TenantId
 	method := "PUT"
 	p, _ := json.Marshal(org)
-	body, _, err := clients2.CallRestEndPoint(url, method, org.TenantId, p)
+	body, _, err := clients.CallRestEndPoint(url, method, org.TenantId, p)
 	var r models.Tenant
 	json.Unmarshal(body, &r)
 	return r, err

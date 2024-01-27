@@ -1,41 +1,22 @@
 package models
 
 type Tenant struct {
-	TenantId         string `json:"tenantId"`
-	ParentTenantId   string `json:"parentTentantId"`
-	Url              string `json:"url"`
-	CommonName       string `json:"commonName"`
-	Contacts         []User `json:"contacts"`
-	LogoUrl          string `json:"logoUrl"`
-	LogoSecondaryUrl string `json:"logoSecondaryUrl"`
-	Mission          string `json:"mission"`
-	Street           string `json:"street"`
-	City             string `json:"city"`
-	State            string `json:"state"`
-	Postal           string `json:"postal"`
-	Email            string `json:"email"`
-	Phone            string `json:"phone"`
-	Hours            Hours  `json:"hours"`
-	Promotional      string `json:"promotional"`
-	Theme            string `json:"theme"`
-	IsAvailable      bool   `json:"isAvailable"`
-	TenantType       string `json:"tenantType"`
+	TenantId       string     `json:"tenantId"`
+	ParentTenantId string     `json:"parentTentantId"`
+	Url            string     `json:"url"`
+	CommonName     string     `json:"commonName"`
+	Contacts       []User     `json:"contacts"`
+	LogoUrl        string     `json:"logoUrl"`
+	Addresses      []Address  `json:"addresses"`
+	Phones         []Phone    `json:"phones"`
+	Emails         []Email    `json:"email"`
+	IsAvailable    bool       `json:"isAvailable"`
+	TenantType     TenantType `json:"tenantType"`
 }
-
-type Hours struct {
-	Monday			string 		`json:"monday"`
-	Tuesday			string 		`json:"tuesday"`
-	Wednesday		string 		`json:"wednesday"`
-	Thursday		string 		`json:"thursday"`
-	Friday			string 		`json:"friday"`
-	Saturday		string 		`json:"saturday"`
-	Sunday			string 		`json:"sunday"`
-}
-
 
 type TenantProvider struct {
 	Id           string      `json:"id"`
-	EdenAdapter  EdenAdapter `json:"edenAdapter"`
+	Adapter      Adapter     `json:"adapter"`
 	TenantId     string      `json:"tenantId"`
 	CalloutUrl   string      `json:"callOutUrl"`
 	UserName     interface{} `json:"username,omitempty"`
@@ -47,17 +28,17 @@ type TenantProvider struct {
 }
 
 type AuthStrategy struct {
-	Id 				string 		`json:"id"`
-	Name 			string 		`json:"name"`
-	Parameters		string 		`json:"parameters"`
+	Id         string `json:"id"`
+	Name       string `json:"name"`
+	Parameters string `json:"parameters"`
 }
 
 type ProviderType struct {
-	Id 				string 		`json:"id"`
-	Name 			string 		`json:"name"`
+	Id   string `json:"id"`
+	Name string `json:"name"`
 }
 
-type EdenAdapter struct {
+type Adapter struct {
 	Id           string       `json:"id"`
 	Name         string       `json:"name"`
 	PluginName   string       `json:"pluginName"`
@@ -68,8 +49,7 @@ type EdenAdapter struct {
 }
 
 type TenantType struct {
-	Id 				string 			`json:"tenantTypeId"`
-	Name 			string 			`json:"name"`
-	Description 	string 			`json:"description"`
-	TenantId		string 			`json:"tenantId"`
+	Id          string `json:"tenantTypeId"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
