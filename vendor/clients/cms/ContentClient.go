@@ -3,14 +3,14 @@ package cms
 import (
 	"encoding/json"
 
-	client "github.com/jjamieson1/eden-sdk/clients"
-	clients2 "github.com/jjamieson1/eden-sdk/clients"
-	"github.com/jjamieson1/eden-sdk/models"
+	client "github.com/jjamieson1/celestial-sdk/clients"
+	clients2 "github.com/jjamieson1/celestial-sdk/clients"
+	"github.com/jjamieson1/celestial-sdk/models"
 )
 
 func GetCmsFromProvider(tenantId string, lang, contentType string, provider models.TenantProvider) ([]models.Cms, error) {
 
-	url := provider.EdenAdapter.AdapterUrl + "/cms/" + lang + "/type/" + contentType
+	url := provider.celestialAdapter.AdapterUrl + "/cms/" + lang + "/type/" + contentType
 	method := "GET"
 
 	body, _, err := client.CallRestEndPoint(url, method, tenantId, nil)
@@ -23,7 +23,7 @@ func GetCmsFromProvider(tenantId string, lang, contentType string, provider mode
 
 func GetCmsFromProviderByCategoryId(tenantId string, lang, categoryId string, provider models.TenantProvider) ([]models.Cms, error) {
 
-	url := provider.EdenAdapter.AdapterUrl + "/categories/" + categoryId
+	url := provider.celestialAdapter.AdapterUrl + "/categories/" + categoryId
 	method := "GET"
 
 	body, _, err := client.CallRestEndPoint(url, method, tenantId, nil)
@@ -35,7 +35,7 @@ func GetCmsFromProviderByCategoryId(tenantId string, lang, categoryId string, pr
 
 func GetCmsFromProviderByCmsId(tenantId string, lang, cmsId string, contentType string, provider models.TenantProvider) (models.Cms, error) {
 
-	url := provider.EdenAdapter.AdapterUrl + "/cms/" + lang + "/" + cmsId
+	url := provider.celestialAdapter.AdapterUrl + "/cms/" + lang + "/" + cmsId
 	method := "GET"
 
 	body, _, err := client.CallRestEndPoint(url, method, tenantId, nil)
@@ -53,7 +53,7 @@ func GetCmsFromProviderByCmsId(tenantId string, lang, cmsId string, contentType 
 }
 
 func PostCmsToContentProvider(tenantId, lang string, provider models.TenantProvider, post models.Cms) (models.Cms, error) {
-	url := provider.EdenAdapter.AdapterUrl + "/cms/" + lang
+	url := provider.celestialAdapter.AdapterUrl + "/cms/" + lang
 
 	p, _ := json.Marshal(post)
 
@@ -64,7 +64,7 @@ func PostCmsToContentProvider(tenantId, lang string, provider models.TenantProvi
 }
 
 func UpdateCmsContent(tenantId string, content models.Cms, provider models.TenantProvider) (models.Cms, error) {
-	url := provider.EdenAdapter.AdapterUrl + "/cms/" + content.CmsContent.Lang + "/" + content.CmsId
+	url := provider.celestialAdapter.AdapterUrl + "/cms/" + content.CmsContent.Lang + "/" + content.CmsId
 	p, _ := json.Marshal(content)
 	response, _, err := clients2.CallRestEndPoint(url, "PUT", tenantId, p)
 	var r models.Cms

@@ -1,17 +1,23 @@
 package models
 
 type Tenant struct {
-	TenantId       string     `json:"tenantId"`
-	ParentTenantId string     `json:"parentTentantId"`
-	Url            string     `json:"url"`
-	CommonName     string     `json:"commonName"`
-	Contacts       []User     `json:"contacts"`
-	LogoUrl        string     `json:"logoUrl"`
-	Addresses      []Address  `json:"addresses"`
-	Phones         []Phone    `json:"phones"`
-	Emails         []Email    `json:"email"`
-	IsAvailable    bool       `json:"isAvailable"`
-	TenantType     TenantType `json:"tenantType"`
+	TenantId       string       `json:"tenantId"`
+	ParentTenantId string       `json:"parentTentantId"`
+	Url            string       `json:"url"`
+	CommonName     string       `json:"commonName"`
+	Contacts       []User       `json:"contacts"`
+	LogoUrl        string       `json:"logoUrl"`
+	Addresses      []Address    `json:"addresses"`
+	Phones         []Phone      `json:"phones"`
+	Emails         []Email      `json:"email"`
+	IsAvailable    bool         `json:"isAvailable"`
+	TenantTypes    []TenantType `json:"tenantType"`
+	SecretKeys     SecretKeys   `json:"keys,omitempty"`
+}
+
+type SecretKeys struct {
+	AppKey string `json:"app-key,omitempty"`
+	ApiKey string `json:"api-key,omitempty"`
 }
 
 type TenantProvider struct {
@@ -49,7 +55,6 @@ type Adapter struct {
 }
 
 type TenantType struct {
-	Id          string `json:"tenantTypeId"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	Id   string `json:"tenantTypeId"`
+	Name string `json:"name"`
 }

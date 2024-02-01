@@ -22,7 +22,7 @@ func GetAllCms(tenantId string, provider models.TenantProvider) ([]models.Cms, e
 
 func GetCmsByCategoryId(tenantId string, categoryId string, provider models.TenantProvider) ([]models.Cms, error) {
 
-	url := provider.Adapter.AdapterUrl + "/category/" + categoryId
+	url := provider.Adapter.AdapterUrl + "/content/category/" + categoryId
 	method := "GET"
 
 	body, _, err := client.CallRestEndPoint(url, method, tenantId, nil)
@@ -51,12 +51,12 @@ func GetCmsByCmsId(tenantId string, cmsId string, contentType string, provider m
 	return cms, err
 }
 
-func CreateCms(tenantId, provider models.TenantProvider, cms models.Cms) (models.Cms, error) {
+func CreateCms(tenantId string, provider models.TenantProvider, cms models.Cms) (models.Cms, error) {
 	url := provider.Adapter.AdapterUrl + "/content"
 
 	p, err := json.Marshal(cms)
 
-	response, _, err := clients.CallRestEndPoint(url, "POST", tenantId, p)
+	response, _, err := client.CallRestEndPoint(url, "POST", tenantId, p)
 	var r models.Cms
 	json.Unmarshal(response, &r)
 	return r, err
@@ -65,7 +65,7 @@ func CreateCms(tenantId, provider models.TenantProvider, cms models.Cms) (models
 func UpdateCmsContent(tenantId string, content models.Cms, provider models.TenantProvider) (models.Cms, error) {
 	url := provider.Adapter.AdapterUrl + "/content/" + content.CmsId
 	p, _ := json.Marshal(content)
-	response, _, err := clients.CallRestEndPoint(url, "PUT", tenantId, p)
+	response, _, err := client.CallRestEndPoint(url, "PUT", tenantId, p)
 	var r models.Cms
 	json.Unmarshal(response, &r)
 	return r, err

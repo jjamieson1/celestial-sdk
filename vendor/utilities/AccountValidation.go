@@ -5,7 +5,7 @@ import (
 	"net/mail"
 	"regexp"
 
-	"github.com/jjamieson1/eden-sdk/models"
+	"github.com/jjamieson1/celestial-sdk/models"
 )
 
 func ValidateName(account models.User) error {

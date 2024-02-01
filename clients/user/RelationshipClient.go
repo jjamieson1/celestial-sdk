@@ -3,12 +3,12 @@ package user
 import (
 	"encoding/json"
 
-	clients "github.com/jjamieson1/eden-sdk/clients"
-	"github.com/jjamieson1/eden-sdk/clients/tenant"
-	"github.com/jjamieson1/eden-sdk/models"
+	clients "github.com/jjamieson1/celestial-sdk/clients"
+	"github.com/jjamieson1/celestial-sdk/clients/tenant"
+	"github.com/jjamieson1/celestial-sdk/models"
 )
 
-func GetRelatedEntitiesByType(domainType, tenantId, userId string) ([]models.RelationShip, int, error) {
+func GetRelatcelestialtitiesByType(domainType, tenantId, userId string) ([]models.RelationShip, int, error) {
 
 	var relationships []models.RelationShip
 
@@ -37,7 +37,7 @@ func AddEntityRelationShip(relationship models.RelationShip, tenantId string) (m
 	if err != nil {
 		return relationship, 500, err
 	}
-	url := selectedUserProvider[0].EdenAdapter.AdapterUrl + "/relationship/" + tenantId
+	url := selectedUserProvider[0].celestialAdapter.AdapterUrl + "/relationship/" + tenantId
 	method := "POST"
 
 	r, _ := json.Marshal(relationship)

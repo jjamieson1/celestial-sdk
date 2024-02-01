@@ -7,7 +7,7 @@ import (
 
 	"github.com/golang-jwt/jwt"
 
-	"github.com/jjamieson1/eden-sdk/models"
+	"github.com/jjamieson1/celestial-sdk/models"
 )
 
 func GetRemoteIPAddress(req *http.Request) string {

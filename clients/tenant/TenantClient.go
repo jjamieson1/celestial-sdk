@@ -7,8 +7,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	clients "github.com/jjamieson1/eden-sdk/clients"
-	"github.com/jjamieson1/eden-sdk/models"
+	clients "github.com/jjamieson1/celestial-sdk/clients"
+	"github.com/jjamieson1/celestial-sdk/models"
 )
 
 func GetProvidersForTenantByType(tenantId, providerType string) ([]models.TenantProvider, error) {
@@ -26,12 +26,12 @@ func GetProvidersForTenantByType(tenantId, providerType string) ([]models.Tenant
 	return tenantProvider, err
 }
 
-func GetProvidersType(providerType string) ([]models.EdenAdapter, error) {
+func GetProvidersType(providerType string) ([]models.Adapter, error) {
 	url := "http://127.0.0.1:9001/api/tenant/provider/type/" + providerType
 	method := "GET"
 	body, _, err := clients.CallRestEndPoint(url, method, providerType, nil)
 
-	var tenantProvider []models.EdenAdapter
+	var tenantProvider []models.Adapter
 	json.Unmarshal(body, &tenantProvider)
 
 	if len(tenantProvider) == 0 {
@@ -78,9 +78,9 @@ func GetTenantByUrl(url string) (models.Tenant, error) {
 	return tenant, err
 }
 
-func GetTenantDetails(tenantId string) (models.Tenant, error) {
+func GetTenantDetails(appKey, apiKey string) (*models.Tenant, error) {
 	var tenant models.Tenant
-	tenantServiceUrl := "http://127.0.0.1:9001/api/v1/tenant/tenants/" + tenantId
+	tenantServiceUrl := "http://127.0.0.1:3002/api/v1/configuration/tenant"
 
 	method := "GET"
 
@@ -88,15 +88,16 @@ func GetTenantDetails(tenantId string) (models.Tenant, error) {
 
 	req, err := http.NewRequest(method, tenantServiceUrl, nil)
 	if err != nil {
-		return tenant, err
+		return &tenant, err
 	}
 
 	req.Header.Add("Accept", "application/json")
-
+	req.Header.Add("api-key", apiKey)
+	req.Header.Add("app-key", appKey)
 	res, err := client.Do(req)
 	if err != nil {
 		message := fmt.Sprintf("error calling the url: %v, with error: %v", tenantServiceUrl, err.Error())
-		return tenant, errors.New(message)
+		return &tenant, errors.New(message)
 	}
 
 	if res.StatusCode != 200 {
@@ -104,7 +105,7 @@ func GetTenantDetails(tenantId string) (models.Tenant, error) {
 		defer res.Body.Close()
 
 		message := fmt.Sprintf("expected 200, but recieved %v calling the url: %v, with error: %v", res.StatusCode, tenantServiceUrl, string(body))
-		return tenant, errors.New(message)
+		return &tenant, errors.New(message)
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
@@ -112,7 +113,7 @@ func GetTenantDetails(tenantId string) (models.Tenant, error) {
 
 	json.Unmarshal(body, &tenant)
 
-	return tenant, err
+	return &tenant, err
 }
 
 func GetUserServiceProvider(tenantId string) ([]models.TenantProvider, error) {
@@ -176,36 +177,4 @@ func GetTenants(tenantId string) ([]models.Tenant, error) {
 	json.Unmarshal(body, &tenant)
 
 	return tenant, err
-}
-
-func AddOrganizationType(orgType models.TenantType) (models.TenantType, error) {
-	url := "http://127.0.0.1:9001/api/tenant/type/"
-	method := "POST"
-	p, _ := json.Marshal(orgType)
-	body, _, err := clients.CallRestEndPoint(url, method, orgType.TenantId, p)
-
-	var r models.TenantType
-	json.Unmarshal(body, &r)
-	return r, err
-}
-
-func AddOrganization(org models.Tenant) (models.Tenant, error) {
-	url := "http://127.0.0.1:9001/api/tenant/details"
-	method := "POST"
-	p, _ := json.Marshal(org)
-	body, _, err := clients.CallRestEndPoint(url, method, org.TenantId, p)
-
-	var r models.Tenant
-	json.Unmarshal(body, &r)
-	return r, err
-}
-
-func UpdateOrganization(org models.Tenant) (models.Tenant, error) {
-	url := "http://127.0.0.1:9001/api/tenant/details/" + org.TenantId
-	method := "PUT"
-	p, _ := json.Marshal(org)
-	body, _, err := clients.CallRestEndPoint(url, method, org.TenantId, p)
-	var r models.Tenant
-	json.Unmarshal(body, &r)
-	return r, err
 }

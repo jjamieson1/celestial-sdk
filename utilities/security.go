@@ -1,7 +1,7 @@
 package utilities
 
 import (
-	"github.com/jjamieson1/eden-sdk/models"
+	"github.com/jjamieson1/celestial-sdk/models"
 	b "golang.org/x/crypto/bcrypt"
 )
 

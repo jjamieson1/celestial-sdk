@@ -1,3 +1,4 @@
+//go:build !go1.7
 // +build !go1.7
 
 // Copyright (c) 2015-2019 Jeevanandam M (jeeva@myjeeva.com)
@@ -18,7 +19,7 @@ import (
 
 // Request type is used to compose and send individual request from client
 // go-resty is provide option override client level settings such as
-// Auth Token, Basic Auth credentials, Header, Query Param, Form Data, Error object
+// Auth Token, Basic Auth crcelestialtials, Header, Query Param, Form Data, Error object
 // and also you can add more options for that particular request
 type Request struct {
 	URL        string

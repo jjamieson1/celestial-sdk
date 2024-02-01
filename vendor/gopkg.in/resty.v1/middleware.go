@@ -193,10 +193,10 @@ func createHTTPRequest(c *Client, r *Request) (err error) {
 	return
 }
 
-func addCredentials(c *Client, r *Request) error {
+func addCrcelestialtials(c *Client, r *Request) error {
 	var isBasicAuth bool
 	// Basic Auth
-	if r.UserInfo != nil { // takes precedence
+	if r.UserInfo != nil { // takes preccelestialce
 		r.RawRequest.SetBasicAuth(r.UserInfo.Username, r.UserInfo.Password)
 		isBasicAuth = true
 	} else if c.UserInfo != nil {
@@ -211,7 +211,7 @@ func addCredentials(c *Client, r *Request) error {
 	}
 
 	// Token Auth
-	if !IsStringEmpty(r.Token) { // takes precedence
+	if !IsStringEmpty(r.Token) { // takes preccelestialce
 		r.RawRequest.Header.Set(hdrAuthorizationKey, "Bearer "+r.Token)
 	} else if !IsStringEmpty(c.Token) {
 		r.RawRequest.Header.Set(hdrAuthorizationKey, "Bearer "+c.Token)

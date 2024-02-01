@@ -1,8 +1,7 @@
 package user
 
 import (
-	clients2 "github.com/jjamieson1/eden-sdk/clients"
-
+	clients2 "github.com/jjamieson1/celestial-sdk/clients"
 )
 
 func DeleteAddress(tenantId, userId, addressId string) (interface{}, int, error) {

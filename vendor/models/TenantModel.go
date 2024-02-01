@@ -23,41 +23,40 @@ type Tenant struct {
 }
 
 type Hours struct {
-	Monday			string 		`json:"monday"`
-	Tuesday			string 		`json:"tuesday"`
-	Wednesday		string 		`json:"wednesday"`
-	Thursday		string 		`json:"thursday"`
-	Friday			string 		`json:"friday"`
-	Saturday		string 		`json:"saturday"`
-	Sunday			string 		`json:"sunday"`
+	Monday    string `json:"monday"`
+	Tuesday   string `json:"tuesday"`
+	Wednesday string `json:"wednesday"`
+	Thursday  string `json:"thursday"`
+	Friday    string `json:"friday"`
+	Saturday  string `json:"saturday"`
+	Sunday    string `json:"sunday"`
 }
 
-
 type TenantProvider struct {
-	Id           string      `json:"id"`
-	EdenAdapter  EdenAdapter `json:"edenAdapter"`
-	TenantId     string      `json:"tenantId"`
-	CalloutUrl   string      `json:"callOutUrl"`
-	UserName     interface{} `json:"username,omitempty"`
-	Password     interface{} `json:"password,omitempty"`
-	ApiKey       interface{} `json:"apiKey,omitempty"`
-	AppKey       interface{} `json:"appKey,omitempty"`
-	Token        interface{} `json:"token,omitempty"`
-	RefreshToken interface{} `json:"refreshToken,omitempty"`
+	Id               string           `json:"id"`
+	celestialAdapter celestialAdapter `json:"celestialAdapter"`
+	TenantId         string           `json:"tenantId"`
+	CalloutUrl       string           `json:"callOutUrl"`
+	UserName         interface{}      `json:"username,omitempty"`
+	Password         interface{}      `json:"password,omitempty"`
+	ApiKey           interface{}      `json:"apiKey,omitempty"`
+	AppKey           interface{}      `json:"appKey,omitempty"`
+	Token            interface{}      `json:"token,omitempty"`
+	RefreshToken     interface{}      `json:"refreshToken,omitempty"`
 }
 
 type AuthStrategy struct {
-	Id 				string 		`json:"id"`
-	Name 			string 		`json:"name"`
-	Parameters		string 		`json:"parameters"`
+	Id         string `json:"id"`
+	Name       string `json:"name"`
+	Parameters string `json:"parameters"`
 }
 
 type ProviderType struct {
-	Id 				string 		`json:"id"`
-	Name 			string 		`json:"name"`
+	Id   string `json:"id"`
+	Name string `json:"name"`
 }
 
-type EdenAdapter struct {
+type celestialAdapter struct {
 	Id           string       `json:"id"`
 	Name         string       `json:"name"`
 	PluginName   string       `json:"pluginName"`
@@ -68,8 +67,8 @@ type EdenAdapter struct {
 }
 
 type TenantType struct {
-	Id 				string 			`json:"tenantTypeId"`
-	Name 			string 			`json:"name"`
-	Description 	string 			`json:"description"`
-	TenantId		string 			`json:"tenantId"`
+	Id          string `json:"tenantTypeId"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	TenantId    string `json:"tenantId"`
 }

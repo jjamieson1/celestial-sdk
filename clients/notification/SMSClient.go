@@ -3,7 +3,7 @@ package notification
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jjamieson1/eden-sdk/models"
+	"github.com/jjamieson1/celestial-sdk/models"
 	"gopkg.in/resty.v1"
 	"log"
 )

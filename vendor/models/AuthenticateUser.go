@@ -7,7 +7,7 @@ type AuthenticatedUser struct {
 	ValidUntil int64  `json:"validUntil"`
 }
 
-type ChallengeCredential struct {
+type ChallengeCrcelestialtial struct {
 	UserId   string `json:"userId"`
 	UserName string `json:"username"`
 	Password string `json:"password"`

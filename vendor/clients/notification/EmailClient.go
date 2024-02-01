@@ -57,10 +57,10 @@ func createBodyFromTemplate(templateVariables map[string]string, templateId int,
 		bodyMessage = bodyMessage + `<p><img width="200px" src="https://canwestcheer.ca/wp-content/uploads/2020/10/Canwest-Virtual-Logo-Small.png" /></p>`
 		bodyMessage = bodyMessage + "<strong>Dear " + templateVariables["name"] + "</strong>"
 		bodyMessage = bodyMessage + "<br /><br />"
-		bodyMessage = bodyMessage + "<p>Eden really appreciates you as a customer.  We are committed to providing the highest quality products and service</p><hr />"
+		bodyMessage = bodyMessage + "<p>celestial really appreciates you as a customer.  We are committed to providing the highest quality products and service</p><hr />"
 		bodyMessage = bodyMessage + "<p>If you could spend a minute and let us know how we did on processing your last order, We would really appreciate it, it will help us improve your service for the future.</p>"
 		bodyMessage = bodyMessage + "<hr />"
-		bodyMessage = bodyMessage + "Please follow the link below: <a href=\"https://store.eden.green/App/Feedback/" + templateVariables["code"] + "\">Eden Store Feedback form</a>"
+		bodyMessage = bodyMessage + "Please follow the link below: <a href=\"https://store.celestial.green/App/Feedback/" + templateVariables["code"] + "\">celestial Store Feedback form</a>"
 	} else if templateId == 5 {
 		log.Printf("Template email login response selected")
 		bodyMessage = bodyMessage + `<p><img width="200px" src="https://canwestcheer.ca/wp-content/uploads/2020/10/Canwest-Virtual-Logo-Small.png" /></p>`

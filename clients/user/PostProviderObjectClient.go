@@ -1,7 +1,7 @@
 package user
 
 import (
-	clients2 "github.com/jjamieson1/eden-sdk/clients"
+	clients2 "github.com/jjamieson1/celestial-sdk/clients"
 )
 
 func AddAddress(tenantId string, userId string, body []byte) ([]byte, int, error) {

@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/jjamieson1/eden-sdk/models"
+	"github.com/jjamieson1/celestial-sdk/models"
 	"gopkg.in/resty.v1"
 )
 
-func GetConfigurationForProvider() (models.EdenConfiguration, error) {
-	var edenConfiguration models.EdenConfiguration
+func GetConfigurationForProvider() (models.celestialConfiguration, error) {
+	var celestialConfiguration models.celestialConfiguration
 	var traceId string
 	t, err := uuid.NewUUID()
 	if err != nil {
@@ -31,7 +31,7 @@ func GetConfigurationForProvider() (models.EdenConfiguration, error) {
 	if resp.StatusCode() != 200 {
 		fmt.Errorf("[ERROR]  configuration status Code %v", resp.StatusCode())
 	} else {
-		err = json.Unmarshal(resp.Body(), &edenConfiguration)
+		err = json.Unmarshal(resp.Body(), &celestialConfiguration)
 	}
-	return edenConfiguration, err
+	return celestialConfiguration, err
 }

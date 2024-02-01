@@ -7,8 +7,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	clients2 "github.com/jjamieson1/eden-sdk/clients"
-	"github.com/jjamieson1/eden-sdk/models"
+	clients2 "github.com/jjamieson1/celestial-sdk/clients"
+	"github.com/jjamieson1/celestial-sdk/models"
 )
 
 func GetProvidersForTenantByType(tenantId, providerType string) ([]models.TenantProvider, error) {
@@ -26,12 +26,12 @@ func GetProvidersForTenantByType(tenantId, providerType string) ([]models.Tenant
 	return tenantProvider, err
 }
 
-func GetProvidersType(providerType string) ([]models.EdenAdapter, error) {
+func GetProvidersType(providerType string) ([]models.celestialAdapter, error) {
 	url := "http://127.0.0.1:9001/api/tenant/provider/type/" + providerType
 	method := "GET"
 	body, _, err := clients2.CallRestEndPoint(url, method, providerType, nil)
 
-	var tenantProvider []models.EdenAdapter
+	var tenantProvider []models.celestialAdapter
 	json.Unmarshal(body, &tenantProvider)
 
 	if len(tenantProvider) == 0 {

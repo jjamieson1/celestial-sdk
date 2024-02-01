@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/jjamieson1/eden-sdk/models"
+	"github.com/jjamieson1/celestial-sdk/models"
 )
 
 func GetReleaseInfo(w http.ResponseWriter, r *http.Request) {

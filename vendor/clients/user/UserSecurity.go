@@ -4,17 +4,17 @@ import (
 	"encoding/json"
 	"errors"
 
-	clients "github.com/jjamieson1/eden-sdk/clients"
-	"github.com/jjamieson1/eden-sdk/clients/notification"
-	"github.com/jjamieson1/eden-sdk/clients/tenant"
-	"github.com/jjamieson1/eden-sdk/models"
+	clients "github.com/jjamieson1/celestial-sdk/clients"
+	"github.com/jjamieson1/celestial-sdk/clients/notification"
+	"github.com/jjamieson1/celestial-sdk/clients/tenant"
+	"github.com/jjamieson1/celestial-sdk/models"
 )
 
 func Authenticate(username, password string, tenantId string) (models.AuthenticatedUser, int, error) {
 
 	var au models.AuthenticatedUser
 
-	var body models.ChallengeCredential
+	var body models.ChallengeCrcelestialtial
 	body.Password = password
 	body.UserName = username
 
@@ -72,21 +72,21 @@ func BeginEmailAuth(email, tenantId string) ([]byte, int, error) {
 
 }
 
-func UpdateCredentials(userId, password, jwt, tenantId string) error {
+func UpdateCrcelestialtials(userId, password, jwt, tenantId string) error {
 
 	selectedUserProvider, err := tenant.GetProvidersForTenantByType(tenantId, "user")
 	if err != nil {
 		return err
 	}
 
-	var body models.ChallengeCredential
+	var body models.ChallengeCrcelestialtial
 	body.Password = password
 	body.UserId = userId
 	body.Jwt = jwt
 
 	b, _ := json.Marshal(body)
 
-	url := selectedUserProvider[0].EdenAdapter.AdapterUrl + "/security/credentials"
+	url := selectedUserProvider[0].celestialAdapter.AdapterUrl + "/security/crcelestialtials"
 	method := "POST"
 
 	_, _, err = clients.CallRestEndPoint(url, method, tenantId, b)

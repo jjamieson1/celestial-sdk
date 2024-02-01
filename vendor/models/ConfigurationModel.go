@@ -1,6 +1,6 @@
 package models
 
-type EdenConfiguration struct {
+type celestialConfiguration struct {
 	OauthClients           []OauthClient           `json:"oauthClients"`
 	DatabaseConfigurations []DatabaseConfiguration `json:"databaseConfiguration"`
 	AuditService           ServiceConfig           `json:"auditService"`
