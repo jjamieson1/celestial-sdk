@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func CallRestEndPoint(url string, method string, tenantId string, b []byte) ([]byte, int, error) {
+func CallRestEndPoint(url string, method string, headers map[string]interface{}, b []byte) ([]byte, int, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest(method, url, bytes.NewReader(b))
 	if err != nil {
@@ -15,7 +15,9 @@ func CallRestEndPoint(url string, method string, tenantId string, b []byte) ([]b
 
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("tenantId", tenantId)
+	for key, value := range headers {
+		req.Header.Add(key, value)
+	}
 
 	res, err := client.Do(req)
 	if err != nil {

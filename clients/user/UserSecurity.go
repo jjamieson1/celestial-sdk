@@ -10,36 +10,36 @@ import (
 	"github.com/jjamieson1/celestial-sdk/models"
 )
 
-func Authenticate(username, password string, tenantId string) (models.AuthenticatedUser, int, error) {
-
+func Authenticate(identifier, password string, tenantId string) (models.AuthenticatedUser, int, error) {
+	headers := map[string]interface{}{
+		"tenantId": tenantId,
+	}
 	var au models.AuthenticatedUser
 
-	var body models.ChallengeCrcelestialtial
+	var body models.LoginCredential
 	body.Password = password
-	body.UserName = username
+	body.EmailOrUserName = identifier
 
 	b, _ := json.Marshal(body)
 
-	url := "http://localhost:9100/api/security/authenticate"
+	url := "http://localhost:3000/api/v1/auth/authenticate"
 	method := "POST"
 
-	response, status, err := clients.CallRestEndPoint(url, method, tenantId, b)
+	response, status, err := clients.CallRestEndPoint(url, method, headers, b)
 	json.Unmarshal(response, &au)
 	return au, status, err
 }
 
-func AuthenticateWithToken(email, token, tenantId string) (models.AuthenticatedUser, int, error) {
-	url := "http://localhost:9100/api/security/authenticate/token/verify"
-	var au models.AuthenticatedUser
-
-	body := make(map[string]string)
-	body["email"] = email
-	body["token"] = token
-	b, _ := json.Marshal(body)
-
-	response, status, err := clients.CallRestEndPoint(url, "POST", tenantId, b)
-	json.Unmarshal(response, &au)
-	return au, status, err
+func CheckToken(email, token, tenantId string) (models.AuthenticatedUser, int, error) {
+	headers := map[string]interface{} {
+		"tenantId": tenantId,
+		"Authorization": "bearer " + token 
+	}
+	url := "http://localhost:3000/api/v1/auth/authenticate/" + token
+	var result interface{}
+	response, status, err := clients.CallRestEndPoint(url, "GET", headers, b)
+	json.Unmarshal(response, &result)
+	return result, status, err
 }
 
 func BeginEmailAuth(email, tenantId string) ([]byte, int, error) {
@@ -67,28 +67,5 @@ func BeginEmailAuth(email, tenantId string) ([]byte, int, error) {
 		}
 		return nil, 200, err
 	}
-
 	return nil, 400, err
-
-}
-
-func UpdateCrcelestialtials(userId, password, jwt, tenantId string) error {
-
-	selectedUserProvider, err := tenant.GetProvidersForTenantByType(tenantId, "user")
-	if err != nil {
-		return err
-	}
-
-	var body models.ChallengeCrcelestialtial
-	body.Password = password
-	body.UserId = userId
-	body.Jwt = jwt
-
-	b, _ := json.Marshal(body)
-
-	url := selectedUserProvider[0].celestialAdapter.AdapterUrl + "/security/crcelestialtials"
-	method := "POST"
-
-	_, _, err = clients.CallRestEndPoint(url, method, tenantId, b)
-	return err
 }
