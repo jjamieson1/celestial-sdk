@@ -8,7 +8,7 @@ type User struct {
 	Emails             []Email   `json:"emails,omitempty"`
 	Phones             []Phone   `json:"phones,omitempty"`
 	Addresses          []Address `json:"addresses,omitempty"`
-	Password           []byte    `json:"password,omitempty"`
+	Password           []byte    `json:"-"`
 	HashedPassword     []byte    `json:"-"`
 	Roles              []Role    `json:"roles,omitempty"`
 	Active             bool      `json:"active"`
