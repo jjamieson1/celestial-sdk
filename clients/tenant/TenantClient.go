@@ -12,9 +12,13 @@ import (
 )
 
 func GetProvidersForTenantByType(tenantId, providerType string) ([]models.TenantProvider, error) {
+	headers := map[string]string{
+		"tenantId": tenantId,
+	}
+
 	url := "http://127.0.0.1:9001/api/tenant/provider/" + providerType + "/" + tenantId
 	method := "GET"
-	body, _, err := clients.CallRestEndPoint(url, method, tenantId, nil)
+	body, _, err := clients.CallRestEndPoint(url, method, headers, nil)
 
 	var tenantProvider []models.TenantProvider
 	json.Unmarshal(body, &tenantProvider)
@@ -26,22 +30,8 @@ func GetProvidersForTenantByType(tenantId, providerType string) ([]models.Tenant
 	return tenantProvider, err
 }
 
-func GetProvidersType(providerType string) ([]models.Adapter, error) {
-	url := "http://127.0.0.1:9001/api/tenant/provider/type/" + providerType
-	method := "GET"
-	body, _, err := clients.CallRestEndPoint(url, method, providerType, nil)
-
-	var tenantProvider []models.Adapter
-	json.Unmarshal(body, &tenantProvider)
-
-	if len(tenantProvider) == 0 {
-		err = errors.New("System Error:  No user provider selected for this tenant")
-	}
-
-	return tenantProvider, err
-}
-
 func GetTenantByUrl(url string) (models.Tenant, error) {
+
 	var tenant models.Tenant
 	tenantServiceUrl := "http://127.0.0.1:9001/api/tenant/details/url/" + url
 
@@ -147,9 +137,13 @@ func GetUserServiceProvider(tenantId string) ([]models.TenantProvider, error) {
 }
 
 func GetTenantTypes(tenantId string) ([]models.TenantType, error) {
+	headers := map[string]string{
+		"tenantId": tenantId,
+	}
+
 	url := "http://127.0.0.1:9001/api/tenant/type/"
 	method := "GET"
-	body, _, err := clients.CallRestEndPoint(url, method, tenantId, nil)
+	body, _, err := clients.CallRestEndPoint(url, method, headers, nil)
 
 	var tenantTypes []models.TenantType
 	json.Unmarshal(body, &tenantTypes)
@@ -158,9 +152,12 @@ func GetTenantTypes(tenantId string) ([]models.TenantType, error) {
 }
 
 func GetTenantChildren(tenantId string) ([]models.Tenant, error) {
+	headers := map[string]string{
+		"tenantId": tenantId,
+	}
 	url := "http://127.0.0.1:9001/api/tenant/children/" + tenantId
 	method := "GET"
-	body, _, err := clients.CallRestEndPoint(url, method, tenantId, nil)
+	body, _, err := clients.CallRestEndPoint(url, method, headers, nil)
 
 	var tenant []models.Tenant
 	json.Unmarshal(body, &tenant)
@@ -169,9 +166,12 @@ func GetTenantChildren(tenantId string) ([]models.Tenant, error) {
 }
 
 func GetTenants(tenantId string) ([]models.Tenant, error) {
+	headers := map[string]string{
+		"tenantId": tenantId,
+	}
 	url := "http://127.0.0.1:9001/api/tenants"
 	method := "GET"
-	body, _, err := clients.CallRestEndPoint(url, method, tenantId, nil)
+	body, _, err := clients.CallRestEndPoint(url, method, headers, nil)
 
 	var tenant []models.Tenant
 	json.Unmarshal(body, &tenant)

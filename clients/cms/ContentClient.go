@@ -8,11 +8,14 @@ import (
 )
 
 func GetAllCms(tenantId string, provider models.TenantProvider) ([]models.Cms, error) {
+	headers := map[string]string{
+		"tenantId": tenantId,
+	}
 
 	url := provider.Adapter.AdapterUrl + "/content"
 	method := "GET"
 
-	body, _, err := client.CallRestEndPoint(url, method, tenantId, nil)
+	body, _, err := client.CallRestEndPoint(url, method, headers, nil)
 
 	var cms []models.Cms
 	json.Unmarshal(body, &cms)
@@ -21,11 +24,13 @@ func GetAllCms(tenantId string, provider models.TenantProvider) ([]models.Cms, e
 }
 
 func GetCmsByCategoryId(tenantId string, categoryId string, provider models.TenantProvider) ([]models.Cms, error) {
-
+	headers := map[string]string{
+		"tenantId": tenantId,
+	}
 	url := provider.Adapter.AdapterUrl + "/content/category/" + categoryId
 	method := "GET"
 
-	body, _, err := client.CallRestEndPoint(url, method, tenantId, nil)
+	body, _, err := client.CallRestEndPoint(url, method, headers, nil)
 
 	var cms []models.Cms
 	json.Unmarshal(body, &cms)
@@ -33,11 +38,14 @@ func GetCmsByCategoryId(tenantId string, categoryId string, provider models.Tena
 }
 
 func GetCmsByCmsId(tenantId string, cmsId string, contentType string, provider models.TenantProvider) (models.Cms, error) {
+	headers := map[string]string{
+		"tenantId": tenantId,
+	}
 
 	url := provider.Adapter.AdapterUrl + "/content/" + cmsId
 	method := "GET"
 
-	body, _, err := client.CallRestEndPoint(url, method, tenantId, nil)
+	body, _, err := client.CallRestEndPoint(url, method, headers, nil)
 
 	var cmss []models.Cms
 	var cms models.Cms
@@ -53,19 +61,25 @@ func GetCmsByCmsId(tenantId string, cmsId string, contentType string, provider m
 
 func CreateCms(tenantId string, provider models.TenantProvider, cms models.Cms) (models.Cms, error) {
 	url := provider.Adapter.AdapterUrl + "/content"
-
+	headers := map[string]string{
+		"tenantId": tenantId,
+	}
 	p, err := json.Marshal(cms)
 
-	response, _, err := client.CallRestEndPoint(url, "POST", tenantId, p)
+	response, _, err := client.CallRestEndPoint(url, "POST", headers, p)
 	var r models.Cms
 	json.Unmarshal(response, &r)
 	return r, err
 }
 
 func UpdateCmsContent(tenantId string, content models.Cms, provider models.TenantProvider) (models.Cms, error) {
+	headers := map[string]string{
+		"tenantId": tenantId,
+	}
+
 	url := provider.Adapter.AdapterUrl + "/content/" + content.CmsId
 	p, _ := json.Marshal(content)
-	response, _, err := client.CallRestEndPoint(url, "PUT", tenantId, p)
+	response, _, err := client.CallRestEndPoint(url, "PUT", headers, p)
 	var r models.Cms
 	json.Unmarshal(response, &r)
 	return r, err

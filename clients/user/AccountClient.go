@@ -1,3 +1,4 @@
+package user
 
 import (
 	"encoding/json"
@@ -12,7 +13,7 @@ import (
 func GetAccount(tokenString, tenantId string) (models.User, int, error) {
 
 	// Add the headers
-	headers := map[string]interface{} {
+	headers := map[string]string {
 		"tenantId": tenantId,
 		"Authorization": "bearer " + tokenString 
 	}

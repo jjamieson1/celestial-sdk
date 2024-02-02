@@ -11,7 +11,7 @@ import (
 )
 
 func Authenticate(identifier, password string, tenantId string) (models.AuthenticatedUser, int, error) {
-	headers := map[string]interface{}{
+	headers := map[string]string {
 		"tenantId": tenantId,
 	}
 	var au models.AuthenticatedUser

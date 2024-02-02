@@ -8,11 +8,13 @@ import (
 )
 
 func GetCategoryFromProvider(tenantId, lang string, provider models.TenantProvider) ([]models.CmsCategory, error) {
-
+	headers := map[string]string{
+		"tenantId": tenantId,
+	}
 	url := provider.Adapter.AdapterUrl + "/categories"
 	method := "GET"
 
-	body, _, err := clients.CallRestEndPoint(url, method, tenantId, nil)
+	body, _, err := clients.CallRestEndPoint(url, method, headers, nil)
 
 	var categories []models.CmsCategory
 	json.Unmarshal(body, &categories)
