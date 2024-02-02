@@ -9,40 +9,50 @@ import (
 )
 
 func GetRelatcelestialtitiesByType(domainType, tenantId, userId string) ([]models.RelationShip, int, error) {
+	headers := map[string]string{
+		"tenantId": tenantId,
+	}
 
 	var relationships []models.RelationShip
 
 	url := "http://localhost:9100/api/relationship/connections/" + userId + "/" + domainType
 	method := "GET"
 
-	response, status, err := clients.CallRestEndPoint(url, method, tenantId, nil)
+	response, status, err := clients.CallRestEndPoint(url, method, headers, nil)
 	json.Unmarshal(response, &relationships)
 	return relationships, status, err
 }
 
 func GetEntityTypes(tenantId string) ([]models.RelationShipType, int, error) {
+	headers := map[string]string{
+		"tenantId": tenantId,
+	}
+
 	var relationshipType []models.RelationShipType
 
 	url := "http://localhost:9100/api/relationship/types/" + tenantId
 	method := "GET"
 
-	response, status, err := clients.CallRestEndPoint(url, method, tenantId, nil)
+	response, status, err := clients.CallRestEndPoint(url, method, headers, nil)
 	json.Unmarshal(response, &relationshipType)
 	return relationshipType, status, err
 }
 
 func AddEntityRelationShip(relationship models.RelationShip, tenantId string) (models.RelationShip, int, error) {
+	headers := map[string]string{
+		"tenantId": tenantId,
+	}
 
 	selectedUserProvider, err := tenant.GetProvidersForTenantByType(tenantId, "user")
 	if err != nil {
 		return relationship, 500, err
 	}
-	url := selectedUserProvider[0].celestialAdapter.AdapterUrl + "/relationship/" + tenantId
+	url := selectedUserProvider[0].Adapter.AdapterUrl + "/relationship/" + tenantId
 	method := "POST"
 
 	r, _ := json.Marshal(relationship)
 
-	response, status, err := clients.CallRestEndPoint(url, method, tenantId, r)
+	response, status, err := clients.CallRestEndPoint(url, method, headers, r)
 	json.Unmarshal(response, &relationship)
 	return relationship, status, err
 }

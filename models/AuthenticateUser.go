@@ -4,6 +4,7 @@ type AuthenticatedUser struct {
 	IsMfa      bool   `json:"isMfa"`
 	JWT        string `json:"jwt"`
 	UserId     string `json:"userId"`
+	User       User   `json:"user"`
 	ValidUntil int64  `json:"validUntil"`
 }
 

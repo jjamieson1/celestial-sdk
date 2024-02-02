@@ -4,14 +4,14 @@ import (
 	"encoding/json"
 	"errors"
 
+	"github.com/golang-jwt/jwt"
 	clients "github.com/jjamieson1/celestial-sdk/clients"
 	"github.com/jjamieson1/celestial-sdk/clients/notification"
-	"github.com/jjamieson1/celestial-sdk/clients/tenant"
 	"github.com/jjamieson1/celestial-sdk/models"
 )
 
 func Authenticate(identifier, password string, tenantId string) (models.AuthenticatedUser, int, error) {
-	headers := map[string]string {
+	headers := map[string]string{
 		"tenantId": tenantId,
 	}
 	var au models.AuthenticatedUser
@@ -30,19 +30,23 @@ func Authenticate(identifier, password string, tenantId string) (models.Authenti
 	return au, status, err
 }
 
-func CheckToken(email, token, tenantId string) (models.AuthenticatedUser, int, error) {
-	headers := map[string]interface{} {
-		"tenantId": tenantId,
-		"Authorization": "bearer " + token 
+func CheckToken(email, token, tenantId string) (jwt.Token, int, error) {
+	headers := map[string]string{
+		"tenantId":      tenantId,
+		"Authorization": "bearer " + token,
 	}
+
 	url := "http://localhost:3000/api/v1/auth/authenticate/" + token
-	var result interface{}
-	response, status, err := clients.CallRestEndPoint(url, "GET", headers, b)
+	var result jwt.Token
+	response, status, err := clients.CallRestEndPoint(url, "GET", headers, nil)
 	json.Unmarshal(response, &result)
 	return result, status, err
 }
 
 func BeginEmailAuth(email, tenantId string) ([]byte, int, error) {
+	headers := map[string]string{
+		"tenantId": tenantId,
+	}
 
 	response, status, err := DoesEmailExist(tenantId, email)
 	if err != nil {
@@ -56,7 +60,7 @@ func BeginEmailAuth(email, tenantId string) ([]byte, int, error) {
 
 	url := "http://localhost:9100/api/security/authenticate/token/create/" + email
 
-	response, status, err = clients.CallRestEndPoint(url, "POST", tenantId, nil)
+	response, status, err = clients.CallRestEndPoint(url, "POST", headers, nil)
 
 	if status == 200 {
 		token := make(map[string]string)
