@@ -12,6 +12,7 @@ type User struct {
 	HashedPassword     []byte    `json:"-"`
 	Roles              []Role    `json:"roles,omitempty"`
 	Active             bool      `json:"active"`
+	TenantId           string    `json:"tenantId"`
 	RequiresPassChange bool      `json:"requiresPassChange"`
 }
 
