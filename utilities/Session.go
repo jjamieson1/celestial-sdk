@@ -28,7 +28,7 @@ func GetSessionVars(c *session.Session) (s models.SessionModel, err error) {
 		return s, err
 	}
 	s.Jwt = fmt.Sprintf("%v", jwt)
-	s.BusinessId = fmt.Sprintf("%v", businessId)
+	s.TenantId = fmt.Sprintf("%v", tenantId)
 	s.UserId = fmt.Sprintf("%v", userId)
 	s.BusinessUrl = fmt.Sprintf("%v", businessUrl)
 	return s, err

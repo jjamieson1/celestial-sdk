@@ -23,6 +23,6 @@ type LoginCredential struct {
 type SessionModel struct {
 	UserId      string `json:"userId"`
 	Jwt         string `json:"jwt"`
-	BusinessId  string `json:"business_id"`
-	BusinessUrl string `json:"business_url"`
+	TenantId    string `json:"tenantId"`
+	BusinessUrl string `json:"businessUrl"`
 }
