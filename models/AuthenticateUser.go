@@ -19,3 +19,10 @@ type LoginCredential struct {
 	EmailOrUserName string `json:"emailOrUserName"`
 	Password        string `json:"password"`
 }
+
+type SessionModel struct {
+	UserId      string `json:"userId"`
+	Jwt         string `json:"jwt"`
+	BusinessId  string `json:"business_id"`
+	BusinessUrl string `json:"business_url"`
+}
