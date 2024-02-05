@@ -23,13 +23,8 @@ func GetSessionVars(c *session.Session) (s models.SessionModel, err error) {
 		return s, err
 	}
 
-	businessUrl, err := c.Get("businessUrl")
-	if err != nil {
-		return s, err
-	}
 	s.Jwt = fmt.Sprintf("%v", jwt)
 	s.TenantId = fmt.Sprintf("%v", tenantId)
 	s.UserId = fmt.Sprintf("%v", userId)
-	s.BusinessUrl = fmt.Sprintf("%v", businessUrl)
 	return s, err
 }
