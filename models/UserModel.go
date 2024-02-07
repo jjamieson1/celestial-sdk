@@ -10,7 +10,7 @@ type User struct {
 	Addresses          []Address `json:"addresses,omitempty"`
 	Password           []byte    `json:"-"`
 	HashedPassword     []byte    `json:"-"`
-	NewPassword        string    `json:"newPassword, omitempty`
+	NewPassword        string    `json:"newPassword,omitempty"`
 	Roles              []Role    `json:"roles,omitempty"`
 	Active             bool      `json:"active"`
 	TenantId           string    `json:"tenantId"`
