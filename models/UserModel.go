@@ -21,5 +21,5 @@ type Role struct {
 	RoleId          string `json:"roleId"`
 	RoleName        string `json:"roleName"`
 	RoleDescription string `json:"roleDescription"`
-	TenantId        string `json:"tenantId"`
+	TenantId        string `json:"tenantId,omitempty"`
 }
