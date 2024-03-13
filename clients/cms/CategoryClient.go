@@ -7,17 +7,17 @@ import (
 	"github.com/jjamieson1/celestial-sdk/models"
 )
 
-func GetCategoryFromProvider(tenantId, lang string, provider models.TenantProvider) ([]models.CmsCategory, error) {
+func GetCategories(tenantId, baseUrl string) ([]models.CmsCategory, int, error) {
 	headers := map[string]string{
 		"tenantId": tenantId,
 	}
-	url := provider.Adapter.AdapterUrl + "/categories"
+	url := baseUrl + "/api/v1/cms/categories"
 	method := "GET"
 
-	body, _, err := clients.CallRestEndPoint(url, method, headers, nil)
+	body, status, err := clients.CallRestEndPoint(url, method, headers, nil)
 
 	var categories []models.CmsCategory
 	json.Unmarshal(body, &categories)
 
-	return categories, err
+	return categories, status, err
 }

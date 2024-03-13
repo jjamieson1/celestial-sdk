@@ -8,8 +8,8 @@ import (
 	"gopkg.in/resty.v1"
 )
 
-func GetConfigurationForProvider() (models.celestialConfiguration, error) {
-	var celestialConfiguration models.celestialConfiguration
+func GetConfigurationForProvider() (models.CelestialConfiguration, error) {
+	var celestialConfiguration models.CelestialConfiguration
 	var traceId string
 	t, err := uuid.NewUUID()
 	if err != nil {

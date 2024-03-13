@@ -3,36 +3,31 @@ package audit
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
+
+	"github.com/jjamieson1/celestial-sdk/clients"
 	"github.com/jjamieson1/celestial-sdk/models"
-	"gopkg.in/resty.v1"
 )
 
-func Error(message models.AuditMessage) {
+func LogItemChange(log models.ItemLog, baseUrl string) (err error) {
+	headers := map[string]string{
+		"tenantId": log.TenantId,
+	}
 
-	//  This is the parent function that will perform the appropriate logging or audit action.
-	//  There should be a service endpoint for both audit and logging that may have different strategies.
-	//  The type will define either audit or log and take actions based on the type.
-	t, err := uuid.NewUUID()
+	url := fmt.Sprintf("%s/api/v1/audit/log-item", baseUrl)
+	method := "POST"
+
+	b, err := json.Marshal(log)
 	if err != nil {
-		message.TraceId = err.Error()
+		return fmt.Errorf("error marshalling the log to json with error: %v", err.Error())
 	}
-	message.TraceId = t.String()
 
-	jsonBody, err := json.Marshal(message)
-
-	fmt.Printf("Sending object %+v, to %v  ", message, "http://audit-service:3000/api/v1/audit")
-	resp, err := resty.R().
-		SetHeader("Accept", "application/json").
-		SetHeader("Content-Type", "application/json").
-		SetBody(string(jsonBody)).
-		Post("http://audit-service:3000/api/v1/audit")
+	_, status, err := clients.CallRestEndPoint(url, method, headers, b)
 	if err != nil {
-		fmt.Errorf("error sending audit event: %v", err.Error())
+		return err
 	}
-	fmt.Println("audit client response time " + resp.Time().String())
+	if status != 200 {
+		return fmt.Errorf("non-success status returned:  http status: %v", status)
+	}
 
-	if resp.StatusCode() != 200 {
-		fmt.Errorf("[ERROR]  audit status Code %v", resp.StatusCode())
-	}
+	return err
 }

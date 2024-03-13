@@ -1,18 +1,30 @@
 package models
 
 type Tenant struct {
-	TenantId       string       `json:"tenantId"`
-	ParentTenantId string       `json:"parentTentantId"`
-	Url            string       `json:"url"`
-	CommonName     string       `json:"commonName"`
-	Contacts       []User       `json:"contacts"`
-	LogoUrl        string       `json:"logoUrl"`
-	Addresses      []Address    `json:"addresses"`
-	Phones         []Phone      `json:"phones"`
-	Emails         []Email      `json:"email"`
-	IsAvailable    bool         `json:"isAvailable"`
-	TenantTypes    []TenantType `json:"tenantType"`
-	SecretKeys     SecretKeys   `json:"keys,omitempty"`
+	TenantId         string       `json:"tenantId"`
+	ParentTenantId   string       `json:"parentTentantId"`
+	Url              string       `json:"url"`
+	CommonName       string       `json:"commonName"`
+	Contacts         []User       `json:"contacts"`
+	LogoUrl          string       `json:"logoUrl"`
+	Addresses        []Address    `json:"addresses"`
+	Phones           []Phone      `json:"phones"`
+	Emails           []Email      `json:"email"`
+	IsAvailable      bool         `json:"isAvailable"`
+	TenantTypes      []TenantType `json:"tenantType"`
+	ServiceProviders []ServiceProviders
+	SecretKeys       SecretKeys `json:"keys,omitempty"`
+}
+
+type ServiceProviders struct {
+	Id              string          `json:"id"`
+	ServiceProvider ServiceProvider `json:"providerType"`
+	BaseURL         string          `json:"baseURL"`
+}
+
+type ServiceProvider struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
 }
 
 type SecretKeys struct {
@@ -39,19 +51,14 @@ type AuthStrategy struct {
 	Parameters string `json:"parameters"`
 }
 
-type ProviderType struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
-}
-
 type Adapter struct {
-	Id           string       `json:"id"`
-	Name         string       `json:"name"`
-	PluginName   string       `json:"pluginName"`
-	ProviderType ProviderType `json:"providerType"`
-	AuthStrategy AuthStrategy `json:"authStrategy"`
-	AdapterUrl   string       `json:"adapterUrl"`
-	Enabled      bool         `json:"enabled"`
+	Id              string          `json:"id"`
+	Name            string          `json:"name"`
+	PluginName      string          `json:"pluginName"`
+	ServiceProvider ServiceProvider `json:"serviceProvider"`
+	AuthStrategy    AuthStrategy    `json:"authStrategy"`
+	AdapterUrl      string          `json:"adapterUrl"`
+	Enabled         bool            `json:"enabled"`
 }
 
 type TenantType struct {

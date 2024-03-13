@@ -10,6 +10,31 @@ import (
 	"github.com/jjamieson1/celestial-sdk/models"
 )
 
+func AuthenticateWithKeys(tenantId, appKey, apiKey string) (au models.AuthenticatedUser, status int, err error) {
+	headers := map[string]string{
+		"tenantId": tenantId,
+		"appKey":   appKey,
+		"apiKey":   apiKey,
+	}
+	url := "http://localhost:3000/api/v1/auth/authenticate"
+	method := "GET"
+	response, status, err := clients.CallRestEndPoint(url, method, headers, nil)
+	json.Unmarshal(response, &au)
+	return au, status, err
+}
+
+func FindTenantIdByEmail(email string) (tenant map[string]string, status int, err error) {
+
+	url := "http://localhost:3000/api/v1/auth/tenant/" + email
+	method := "GET"
+	response, status, err := clients.CallRestEndPoint(url, method, nil, nil)
+	if err != nil {
+		return tenant, status, err
+	}
+	err = json.Unmarshal(response, &tenant)
+	return tenant, status, err
+}
+
 func Authenticate(identifier, password string, tenantId string) (models.AuthenticatedUser, int, error) {
 	headers := map[string]string{
 		"tenantId": tenantId,
@@ -30,15 +55,10 @@ func Authenticate(identifier, password string, tenantId string) (models.Authenti
 	return au, status, err
 }
 
-func CheckToken(email, token, tenantId string) (jwt.Token, int, error) {
-	headers := map[string]string{
-		"tenantId":      tenantId,
-		"Authorization": "bearer " + token,
-	}
-
+func CheckToken(token string) (jwt.Token, int, error) {
 	url := "http://localhost:3000/api/v1/auth/authenticate/" + token
 	var result jwt.Token
-	response, status, err := clients.CallRestEndPoint(url, "GET", headers, nil)
+	response, status, err := clients.CallRestEndPoint(url, "GET", nil, nil)
 	json.Unmarshal(response, &result)
 	return result, status, err
 }
@@ -72,4 +92,16 @@ func BeginEmailAuth(email, tenantId string) ([]byte, int, error) {
 		return nil, 200, err
 	}
 	return nil, 400, err
+}
+
+func GetRolesByToken(token, tenantId string) (roles []models.Role, status int, err error) {
+	headers := map[string]string{
+		"tenantId":      tenantId,
+		"Authorization": "Bearer " + token,
+	}
+	url := "http://localhost:3000/api/v1/auth/account/roles/token"
+
+	response, status, err := clients.CallRestEndPoint(url, "GET", headers, nil)
+	json.Unmarshal(response, &roles)
+	return roles, status, err
 }

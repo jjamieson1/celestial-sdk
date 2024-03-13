@@ -7,12 +7,13 @@ import (
 	"github.com/jjamieson1/celestial-sdk/models"
 )
 
-func GetAllCms(tenantId string, provider models.TenantProvider) ([]models.Cms, error) {
+func GetAllCms(tenantId, token string, baseUrl string) ([]models.Cms, error) {
 	headers := map[string]string{
-		"tenantId": tenantId,
+		"tenantId":      tenantId,
+		"Authorization": "Bearer " + token,
 	}
 
-	url := provider.Adapter.AdapterUrl + "/content"
+	url := baseUrl + "/api/v1/cms/content"
 	method := "GET"
 
 	body, _, err := client.CallRestEndPoint(url, method, headers, nil)
@@ -23,64 +24,60 @@ func GetAllCms(tenantId string, provider models.TenantProvider) ([]models.Cms, e
 	return cms, err
 }
 
-func GetCmsByCategoryId(tenantId string, categoryId string, provider models.TenantProvider) ([]models.Cms, error) {
+func GetCmsByCategoryId(tenantId, token, categoryId, baseUrl string) (content []models.Cms, status int, err error) {
 	headers := map[string]string{
-		"tenantId": tenantId,
+		"tenantId":      tenantId,
+		"Authorization": "Bearer " + token,
 	}
-	url := provider.Adapter.AdapterUrl + "/content/category/" + categoryId
+	url := baseUrl + "/api/v1/cms/content/category/" + categoryId
 	method := "GET"
-
-	body, _, err := client.CallRestEndPoint(url, method, headers, nil)
-
+	body, status, err := client.CallRestEndPoint(url, method, headers, nil)
 	var cms []models.Cms
 	json.Unmarshal(body, &cms)
-	return cms, err
+	return cms, status, err
 }
 
-func GetCmsByCmsId(tenantId string, cmsId string, contentType string, provider models.TenantProvider) (models.Cms, error) {
+func GetCmsByCmsId(cmsId, tenantId, baseUrl string) (models.Cms, int, error) {
 	headers := map[string]string{
 		"tenantId": tenantId,
 	}
 
-	url := provider.Adapter.AdapterUrl + "/content/" + cmsId
+	url := baseUrl + "/api/v1/cms/content/" + cmsId
 	method := "GET"
 
-	body, _, err := client.CallRestEndPoint(url, method, headers, nil)
+	body, status, err := client.CallRestEndPoint(url, method, headers, nil)
 
-	var cmss []models.Cms
 	var cms models.Cms
-	json.Unmarshal(body, &cmss)
+	json.Unmarshal(body, &cms)
 
-	if len(cmss) == 0 {
-		return cms, err
-	}
-
-	cms = cmss[0]
-	return cms, err
+	return cms, status, err
 }
 
-func CreateCms(tenantId string, provider models.TenantProvider, cms models.Cms) (models.Cms, error) {
-	url := provider.Adapter.AdapterUrl + "/content"
-	headers := map[string]string{
-		"tenantId": tenantId,
-	}
-	p, err := json.Marshal(cms)
-
-	response, _, err := client.CallRestEndPoint(url, "POST", headers, p)
-	var r models.Cms
-	json.Unmarshal(response, &r)
-	return r, err
-}
-
-func UpdateCmsContent(tenantId string, content models.Cms, provider models.TenantProvider) (models.Cms, error) {
+func DeleteCmsByCmsId(tenantId string, cmsId string, baseUrl string) (int, error) {
 	headers := map[string]string{
 		"tenantId": tenantId,
 	}
 
-	url := provider.Adapter.AdapterUrl + "/content/" + content.CmsId
-	p, _ := json.Marshal(content)
-	response, _, err := client.CallRestEndPoint(url, "PUT", headers, p)
-	var r models.Cms
-	json.Unmarshal(response, &r)
-	return r, err
+	url := baseUrl + "/api/v1/cms/content/" + cmsId
+	method := "DELETE"
+
+	_, status, err := client.CallRestEndPoint(url, method, headers, nil)
+
+	return status, err
+}
+
+func AddUpdateCmsItem(tenantId, baseUrl string, cms models.Cms) (cmsResponse models.Cms, status int, err error) {
+	url := baseUrl + "/content"
+	headers := map[string]string{
+		"tenantId": tenantId,
+	}
+	b, err := json.Marshal(cms)
+	if err != nil {
+		return cmsResponse, status, err
+	}
+
+	response, status, err := client.CallRestEndPoint(url, "POST", headers, b)
+
+	json.Unmarshal(response, &cmsResponse)
+	return cmsResponse, status, err
 }

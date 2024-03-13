@@ -22,8 +22,8 @@ func ComparePasswords(storedPassword, password []byte) error {
 	return err
 }
 
-func IsAdmin(u models.User) bool {
-	for _, v := range u.Roles {
+func IsAdmin(roles []models.Role) bool {
+	for _, v := range roles {
 		if v.RoleId == "1" {
 			return true
 		}
