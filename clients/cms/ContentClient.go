@@ -2,6 +2,7 @@ package cms
 
 import (
 	"encoding/json"
+	"fmt"
 
 	client "github.com/jjamieson1/celestial-sdk/clients"
 	"github.com/jjamieson1/celestial-sdk/models"
@@ -66,10 +67,11 @@ func DeleteCmsByCmsId(tenantId string, cmsId string, baseUrl string) (int, error
 	return status, err
 }
 
-func AddUpdateCmsItem(tenantId, baseUrl string, cms models.Cms) (cmsResponse models.Cms, status int, err error) {
-	url := baseUrl + "/content"
+func AddUpdateCmsItem(cms models.Cms, tenantId, jwt string, baseUrl string) (cmsResponse models.Cms, status int, err error) {
+	url := baseUrl + "/api/v1/cms/content"
 	headers := map[string]string{
-		"tenantId": tenantId,
+		"tenantId":      tenantId,
+		"Authorization": "Bearer " + jwt,
 	}
 	b, err := json.Marshal(cms)
 	if err != nil {
@@ -77,6 +79,9 @@ func AddUpdateCmsItem(tenantId, baseUrl string, cms models.Cms) (cmsResponse mod
 	}
 
 	response, status, err := client.CallRestEndPoint(url, "POST", headers, b)
+	if status != 200 {
+		err = fmt.Errorf(string(response))
+	}
 
 	json.Unmarshal(response, &cmsResponse)
 	return cmsResponse, status, err

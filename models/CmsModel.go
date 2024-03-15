@@ -38,5 +38,5 @@ type CmsCategory struct {
 	CmsCategoryId string `json:"cmsCategoryId"`
 	Name          string `json:"name"`
 	ParentId      string `json:"parentId"`
-	ImageUrl      string `json:"imageUrl"`
+	Image         Image  `json:"image,omitempty"`
 }
