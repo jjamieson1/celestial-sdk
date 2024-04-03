@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 
 	clients "github.com/jjamieson1/celestial-sdk/clients"
-	"github.com/jjamieson1/celestial-sdk/clients/tenant"
 	"github.com/jjamieson1/celestial-sdk/models"
 )
 
@@ -38,21 +37,21 @@ func GetEntityTypes(tenantId string) ([]models.RelationShipType, int, error) {
 	return relationshipType, status, err
 }
 
-func AddEntityRelationShip(relationship models.RelationShip, tenantId string) (models.RelationShip, int, error) {
-	headers := map[string]string{
-		"tenantId": tenantId,
-	}
+// func AddEntityRelationShip(relationship models.RelationShip, tenantId string) (models.RelationShip, int, error) {
+// 	headers := map[string]string{
+// 		"tenantId": tenantId,
+// 	}
 
-	selectedUserProvider, err := tenant.GetProvidersForTenantByType(tenantId, "user")
-	if err != nil {
-		return relationship, 500, err
-	}
-	url := selectedUserProvider[0].Adapter.AdapterUrl + "/relationship/" + tenantId
-	method := "POST"
+// 	selectedUserProvider, err := tenant.GetProvidersForTenantByType(tenantId, "user")
+// 	if err != nil {
+// 		return relationship, 500, err
+// 	}
+// 	url := selectedUserProvider[0].Adapter.AdapterUrl + "/relationship/" + tenantId
+// 	method := "POST"
 
-	r, _ := json.Marshal(relationship)
+// 	r, _ := json.Marshal(relationship)
 
-	response, status, err := clients.CallRestEndPoint(url, method, headers, r)
-	json.Unmarshal(response, &relationship)
-	return relationship, status, err
-}
+// 	response, status, err := clients.CallRestEndPoint(url, method, headers, r)
+// 	json.Unmarshal(response, &relationship)
+// 	return relationship, status, err
+// }

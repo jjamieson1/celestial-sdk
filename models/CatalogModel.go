@@ -263,10 +263,30 @@ type Category struct {
 	Children      []Category `json:"children"`
 	NumItemGroups int        `json:"numItemGroups"`
 	Next          string     `json:"next"`
-	Image         Image      `json:"image,omitempty"`
+	Images        []Image    `json:"images"`
 	IsDisplayed   bool       `json:"isDisplayed,omitempty"`
 	LastSync      time.Time  `json:"lastSync,omitempty"`
 	AddedBy       string     `json:"addedBy"`
 	CreateTime    time.Time  `json:"createTime,omitempty"`
 	TimeStamp     time.Time  `json:"timeStamp,omitempty"`
+}
+
+type CategoryList struct {
+	MetaData   MetaData   `json:"metaData"`
+	Categories []Category `json:"categories"`
+}
+
+type MetaData struct {
+	NumResults int    `json:"numResults"`
+	Next       string `json:"next"`
+	Previous   string `json:"previous"`
+	Page       int    `json:"page"`
+	PageItems  int    `json:"pageItems"`
+	Cache      Cache  `json:"cache"`
+}
+
+type Cache struct {
+	IsCached       bool      `json:"isCached"`
+	CacheSetExpiry time.Time `json:"cacheSetExpiry"`
+	CacheSet       time.Time `json:"cacheSet"`
 }

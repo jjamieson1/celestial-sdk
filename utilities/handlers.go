@@ -18,7 +18,6 @@ func HandleBadRequestError(key, message string, statusCode int, c *revel.Control
 }
 
 func HandleInternalError(key, message string, statusCode int, c *revel.Controller) revel.Result {
-	revel.AppLog.Errorf("handleError: %v", statusCode)
 	c.Validation.Error("error").Key(key).Message(message)
 	c.Response.Status = statusCode
 	return c.RenderJSON(c.Validation.Errors)

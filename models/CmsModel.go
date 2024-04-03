@@ -18,6 +18,7 @@ type CmsMetaData struct {
 	CmsCategory   string    `json:"cmsCategory"`
 	Modified      time.Time `json:"modified"`
 	Slug          string    `json:"slug"`
+	Sort          int       `json:"sort"`
 	Status        string    `json:"status"`
 	Who           string    `json:"who"`
 	IsFeatured    bool      `json:"isFeatured"`
@@ -35,8 +36,8 @@ type CmsContent struct {
 }
 
 type CmsCategory struct {
-	CmsCategoryId string `json:"cmsCategoryId"`
-	Name          string `json:"name"`
-	ParentId      string `json:"parentId"`
-	Image         Image  `json:"image,omitempty"`
+	CmsCategoryId string  `json:"cmsCategoryId"`
+	Name          string  `json:"name"`
+	ParentId      string  `json:"parentId"`
+	Images        []Image `json:"image,omitempty"`
 }

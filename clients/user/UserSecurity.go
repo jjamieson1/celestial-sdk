@@ -3,11 +3,12 @@ package user
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 
-	"github.com/golang-jwt/jwt"
 	clients "github.com/jjamieson1/celestial-sdk/clients"
-	"github.com/jjamieson1/celestial-sdk/clients/notification"
+	notificationClient "github.com/jjamieson1/celestial-sdk/clients/messaging"
 	"github.com/jjamieson1/celestial-sdk/models"
+	"github.com/revel/revel"
 )
 
 func AuthenticateWithKeys(tenantId, appKey, apiKey string) (au models.AuthenticatedUser, status int, err error) {
@@ -23,23 +24,28 @@ func AuthenticateWithKeys(tenantId, appKey, apiKey string) (au models.Authentica
 	return au, status, err
 }
 
-func FindTenantIdByEmail(email string) (tenant map[string]string, status int, err error) {
+func FindTenantIdByEmail(email string) (tenant map[string]string, err error) {
 
 	url := "http://localhost:3000/api/v1/auth/tenant/" + email
 	method := "GET"
 	response, status, err := clients.CallRestEndPoint(url, method, nil, nil)
 	if err != nil {
-		return tenant, status, err
+		return tenant, err
 	}
+	if status != 200 {
+		var message []models.ValidationError
+		json.Unmarshal(response, &message)
+		return tenant, fmt.Errorf("%v", message)
+	}
+
 	err = json.Unmarshal(response, &tenant)
-	return tenant, status, err
+	return tenant, err
 }
 
-func Authenticate(identifier, password string, tenantId string) (models.AuthenticatedUser, int, error) {
+func Authenticate(identifier, password string, tenantId string) (au models.AuthenticatedUser, err error) {
 	headers := map[string]string{
 		"tenantId": tenantId,
 	}
-	var au models.AuthenticatedUser
 
 	var body models.LoginCredential
 	body.Password = password
@@ -51,16 +57,32 @@ func Authenticate(identifier, password string, tenantId string) (models.Authenti
 	method := "POST"
 
 	response, status, err := clients.CallRestEndPoint(url, method, headers, b)
-	json.Unmarshal(response, &au)
-	return au, status, err
+	if err != nil {
+		return au, err
+	}
+	if status != 200 {
+		var message []models.ValidationError
+		json.Unmarshal(response, &message)
+		return au, fmt.Errorf("%v", message)
+	}
+
+	err = json.Unmarshal(response, &au)
+	return au, err
 }
 
-func CheckToken(token string) (jwt.Token, int, error) {
+func CheckToken(token string) (result interface{}, err error) {
 	url := "http://localhost:3000/api/v1/auth/authenticate/" + token
-	var result jwt.Token
+
 	response, status, err := clients.CallRestEndPoint(url, "GET", nil, nil)
-	json.Unmarshal(response, &result)
-	return result, status, err
+	if status != 200 {
+		return result, fmt.Errorf("error authenticating token with http status: %v", status)
+	}
+	if err != nil {
+		return result, fmt.Errorf("error authenticating token with error: %v", err.Error())
+	}
+
+	err = json.Unmarshal(response, &result)
+	return result, err
 }
 
 func BeginEmailAuth(email, tenantId string) ([]byte, int, error) {
@@ -85,7 +107,7 @@ func BeginEmailAuth(email, tenantId string) ([]byte, int, error) {
 	if status == 200 {
 		token := make(map[string]string)
 		json.Unmarshal(response, &token)
-		err := notification.SendViaSMTP(email, email, "Your login details", token, 5)
+		err := notificationClient.SendViaSMTP(email, email, "Your login details", token, 5)
 		if err != nil {
 			return nil, 500, err
 		}
@@ -94,7 +116,7 @@ func BeginEmailAuth(email, tenantId string) ([]byte, int, error) {
 	return nil, 400, err
 }
 
-func GetRolesByToken(token, tenantId string) (roles []models.Role, status int, err error) {
+func GetRolesByToken(token, tenantId string) (roles []models.Role, err error) {
 	headers := map[string]string{
 		"tenantId":      tenantId,
 		"Authorization": "Bearer " + token,
@@ -102,6 +124,17 @@ func GetRolesByToken(token, tenantId string) (roles []models.Role, status int, e
 	url := "http://localhost:3000/api/v1/auth/account/roles/token"
 
 	response, status, err := clients.CallRestEndPoint(url, "GET", headers, nil)
-	json.Unmarshal(response, &roles)
-	return roles, status, err
+	if err != nil {
+		return roles, err
+	}
+	if status != 200 {
+		var message []models.ValidationError
+		json.Unmarshal(response, &message)
+		return roles, fmt.Errorf("%v", message)
+	}
+
+	err = json.Unmarshal(response, &roles)
+
+	revel.AppLog.Debugf("GetRolesByToken: found roles: %+v", roles)
+	return roles, err
 }

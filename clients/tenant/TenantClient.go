@@ -2,7 +2,6 @@ package tenant
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -12,76 +11,76 @@ import (
 	"github.com/revel/revel"
 )
 
-func GetProvidersForTenantByType(tenantId, providerType string) ([]models.TenantProvider, error) {
-	headers := map[string]string{
-		"tenantId": tenantId,
-	}
+func GetTenantIdByUrl(url, baseUrl string) (tenant models.Tenant, err error) {
 
-	url := "http://127.0.0.1:9001/api/tenant/provider/" + providerType + "/" + tenantId
-	method := "GET"
-	body, _, err := clients.CallRestEndPoint(url, method, headers, nil)
-
-	var tenantProvider []models.TenantProvider
-	json.Unmarshal(body, &tenantProvider)
-
-	if len(tenantProvider) == 0 {
-		err = errors.New(fmt.Sprintf("System Error:  No %v provider selected for this tenant", providerType))
-	}
-
-	return tenantProvider, err
-}
-
-func GetTenantIdByUrl(url string) (string, int, error) {
-
-	var tenant map[string]string
-	hostUrl := "http://127.0.0.1:3002/api/v1/configuration/url/" + url
+	hostUrl := baseUrl + "/api/v1/configuration/url/" + url
 
 	method := "GET"
 
 	response, status, err := clients.CallRestEndPoint(hostUrl, method, nil, nil)
-	json.Unmarshal(response, &tenant)
-	return tenant["tenantId"], status, err
+	if err != nil {
+		revel.AppLog.Errorf("error calling out for a tenantId with error: %v", err.Error())
+		return tenant, err
+	}
+	if status != 200 {
+		revel.AppLog.Errorf("non-success status recieved: %v", status)
+		var message []models.ValidationError
+		json.Unmarshal(response, &message)
+		return tenant, fmt.Errorf("error %v", message)
+	}
+
+	err = json.Unmarshal(response, &tenant)
+	return tenant, err
 }
 
-func GetTenantDetails(appKey, apiKey string) (*models.Tenant, int, error) {
-	var tenant models.Tenant
-	tenantServiceUrl := "http://127.0.0.1:3002/api/v1/configuration/tenant"
+// /api/v1/configuration/tenant/name/:tenantId
+func GetTenantNameByTenantId(tenantId, baseUrl string) (tenant models.Tenant, err error) {
+	hostUrl := baseUrl + "/api/v1/configuration/tenant/name/" + tenantId
 
 	method := "GET"
 
-	client := &http.Client{}
-
-	req, err := http.NewRequest(method, tenantServiceUrl, nil)
+	response, status, err := clients.CallRestEndPoint(hostUrl, method, nil, nil)
 	if err != nil {
-		return &tenant, 0, err
+		return tenant, err
+	}
+	if status != 200 {
+		var message []models.ValidationError
+		json.Unmarshal(response, &message)
+		return tenant, fmt.Errorf("%v", message)
 	}
 
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("api-key", apiKey)
-	req.Header.Add("app-key", appKey)
-	res, err := client.Do(req)
-	if err != nil {
-		message := fmt.Sprintf("error calling the url: %v, with error: %v", tenantServiceUrl, err.Error())
-		return &tenant, 500, errors.New(message)
-	}
+	err = json.Unmarshal(response, &tenant)
 
-	if res.StatusCode != 200 {
-		body, _ := ioutil.ReadAll(res.Body)
-		defer res.Body.Close()
-
-		message := fmt.Sprintf("expected 200, but recieved %v calling the url: %v, with error: %v", res.StatusCode, tenantServiceUrl, string(body))
-		return &tenant, res.StatusCode, errors.New(message)
-	}
-
-	body, err := ioutil.ReadAll(res.Body)
-	defer res.Body.Close()
-
-	json.Unmarshal(body, &tenant)
-
-	return &tenant, 200, err
+	return tenant, err
 }
 
-func GetTenantDetailsByJWT(jwt, tenantId string) (tenant models.Tenant, status int, err error) {
+func GetTenantDetails(appKey, apiKey, baseUrl string) (tenant models.Tenant, err error) {
+
+	hostUrl := baseUrl + "/api/v1/configuration/tenant"
+	headers := map[string]string{
+		"api-key": apiKey,
+		"app-key": appKey,
+		"Accept":  "application/json",
+	}
+
+	method := "GET"
+
+	response, status, err := clients.CallRestEndPoint(hostUrl, method, headers, nil)
+	if err != nil {
+		return tenant, err
+	}
+	if status != 200 {
+		var message []models.ValidationError
+		json.Unmarshal(response, &message)
+		return tenant, fmt.Errorf("%v", message)
+	}
+
+	err = json.Unmarshal(response, &tenant)
+
+	return tenant, err
+}
+
+func GetTenantDetailsByJWT(jwt, tenantId string) (tenant models.Tenant, err error) {
 
 	url := "http://127.0.0.1:3002/api/v1/configuration/tenant/" + tenantId
 	method := "GET"
@@ -93,8 +92,17 @@ func GetTenantDetailsByJWT(jwt, tenantId string) (tenant models.Tenant, status i
 	revel.AppLog.Debugf("headers: %+v", headers)
 
 	response, status, err := clients.CallRestEndPoint(url, method, headers, nil)
-	json.Unmarshal(response, &tenant)
-	return tenant, status, err
+	if err != nil {
+		return tenant, err
+	}
+	if status != 200 {
+		var message []models.ValidationError
+		json.Unmarshal(response, &message)
+		return tenant, fmt.Errorf("%v", message)
+	}
+
+	err = json.Unmarshal(response, &tenant)
+	return tenant, err
 }
 
 func GetUserServiceProvider(tenantId string) ([]models.TenantProvider, error) {

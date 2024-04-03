@@ -10,26 +10,30 @@ import (
 	"github.com/revel/revel"
 )
 
-func GetCategories(isDisplayed bool, tenantId, baseURL string) ([]models.Category, int, error) {
+func GetCategories(displayAll bool, page, pageSize, tenantId, baseURL string) (categories []models.Category, err error) {
 	headers := map[string]string{
 		"tenantId": tenantId,
 	}
 
-	showAll := strconv.FormatBool(isDisplayed)
-	url := fmt.Sprintf("%s/api/v1/catalog/categories?isDisplayed=%s", baseURL, showAll)
+	showAll := strconv.FormatBool(displayAll)
+	// + "?page=" + page + "&pageSize=" + pageSize
+	url := fmt.Sprintf("%s/api/v1/catalog/categories?isDisplayed=%s&page=%s&pageSize=%s", baseURL, showAll, page, pageSize)
 	method := "GET"
 
 	body, status, err := clients.CallRestEndPoint(url, method, headers, nil)
+	if status != 200 {
+		var message []models.ValidationError
+		json.Unmarshal(body, &message)
+		return categories, fmt.Errorf("%v", message)
+	}
+
 	if err != nil {
-		return nil, status, err
+		return categories, err
 	}
 
-	var categories []models.Category
-	if err := json.Unmarshal(body, &categories); err != nil {
-		return nil, status, err
-	}
+	err = json.Unmarshal(body, &categories)
 
-	return categories, status, err
+	return categories, err
 }
 
 func AddUpdateCategory(category models.Category, tenantId, baseURL string) (models.Category, int, error) {
