@@ -13,18 +13,17 @@ type Cms struct {
 }
 
 type CmsMetaData struct {
-	CmsCategoryId string    `json:"cmsCategoryId"`
-	CmsType       string    `json:"cmsType"`
-	CmsCategory   string    `json:"cmsCategory"`
-	Modified      time.Time `json:"modified"`
-	Slug          string    `json:"slug"`
-	Sort          int       `json:"sort"`
-	Status        string    `json:"status"`
-	Who           string    `json:"who"`
-	IsFeatured    bool      `json:"isFeatured"`
-	IsPublic      bool      `json:"isPublic"`
-	Created       time.Time `json:"created"`
-	BusinessId    string    `json:"businessId"`
+	CmsType     string      `json:"cmsType"`
+	CmsCategory CmsCategory `json:"cmsCategory"`
+	Modified    time.Time   `json:"modified"`
+	Slug        string      `json:"slug"`
+	Sort        int         `json:"sort"`
+	Status      string      `json:"status"`
+	Who         string      `json:"who"`
+	IsFeatured  bool        `json:"isFeatured"`
+	IsPublic    bool        `json:"isPublic"`
+	Created     time.Time   `json:"created"`
+	BusinessId  string      `json:"businessId"`
 }
 
 type CmsContent struct {
@@ -36,8 +35,17 @@ type CmsContent struct {
 }
 
 type CmsCategory struct {
-	CmsCategoryId string  `json:"cmsCategoryId"`
-	Name          string  `json:"name"`
-	ParentId      string  `json:"parentId"`
-	Images        []Image `json:"image,omitempty"`
+	CmsCategoryId      string         `json:"cmsCategoryId"`
+	Name               string         `json:"name"`
+	Sort               int            `json:"sort"`
+	InMenu             bool           `json:"inMenu"`
+	CategoryParent     CategoryParent `json:"categoryParent,omitempty"`
+	ChildrenCategories []CmsCategory  `json:"children,omitempty"`
+	Images             []Image        `json:"image,omitempty"`
+}
+
+type CategoryParent struct {
+	ParentId string  `json:"parentId,omitempty"`
+	Name     string  `json:"name,omitempty"`
+	Images   []Image `json:"image,omitempty"`
 }

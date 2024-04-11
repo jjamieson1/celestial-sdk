@@ -6,6 +6,7 @@ import (
 
 	clients "github.com/jjamieson1/celestial-sdk/clients"
 	"github.com/jjamieson1/celestial-sdk/models"
+	"github.com/revel/revel"
 )
 
 func GetCategories(tenantId, baseUrl string) (categories []models.CmsCategory, err error) {
@@ -20,6 +21,7 @@ func GetCategories(tenantId, baseUrl string) (categories []models.CmsCategory, e
 		return categories, err
 	}
 	if status != 200 {
+		revel.AppLog.Errorf("error getting categories with status error: %v", status)
 		var message []models.ValidationError
 		json.Unmarshal(body, &message)
 		return categories, fmt.Errorf("%v", message)
@@ -30,7 +32,7 @@ func GetCategories(tenantId, baseUrl string) (categories []models.CmsCategory, e
 	return categories, err
 }
 
-func AddCategory(categoryName, jwt, tenantId, baseUrl string) (category models.CmsCategory, err error) {
+func AddCategory(category models.CmsCategory, jwt, tenantId, baseUrl string) (response models.CmsCategory, err error) {
 	headers := map[string]string{
 		"tenantId":      tenantId,
 		"Authorization": "Bearer " + jwt,
@@ -38,13 +40,7 @@ func AddCategory(categoryName, jwt, tenantId, baseUrl string) (category models.C
 	url := baseUrl + "/api/v1/cms/categories"
 	method := "POST"
 
-	category.Name = categoryName
-	category.ParentId = "0"
-
-	newCategory := models.CmsCategory{
-		Name:     categoryName,
-		ParentId: "0",
-	}
+	newCategory := category
 
 	b, err := json.Marshal(newCategory)
 	if err != nil {
@@ -61,9 +57,9 @@ func AddCategory(categoryName, jwt, tenantId, baseUrl string) (category models.C
 		return category, fmt.Errorf("%v", message)
 	}
 
-	err = json.Unmarshal(body, &category)
+	err = json.Unmarshal(body, &response)
 
-	return category, err
+	return response, err
 }
 
 func DeleteCategory(categoryId, jwt, tenantId, baseUrl string) error {

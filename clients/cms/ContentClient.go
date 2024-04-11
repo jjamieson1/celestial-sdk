@@ -127,26 +127,3 @@ func AddUpdateCmsItem(cms models.Cms, tenantId, jwt string, baseUrl string) (cms
 
 	return cmsResponse, err
 }
-
-func SearchCms(searchTerm, tenantId, baseUrl string) (cms []models.Cms, err error) {
-	headers := map[string]string{
-		"tenantId": tenantId,
-	}
-
-	url := baseUrl + "/api/v1/cms/content/search/" + searchTerm
-	method := "GET"
-
-	body, status, err := client.CallRestEndPoint(url, method, headers, nil)
-	if err != nil {
-		return cms, err
-	}
-	if status != 200 {
-		var message []models.ValidationError
-		json.Unmarshal(body, &message)
-		return cms, fmt.Errorf("%v", message)
-	}
-
-	json.Unmarshal(body, &cms)
-
-	return cms, err
-}

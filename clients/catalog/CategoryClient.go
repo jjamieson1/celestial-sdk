@@ -10,14 +10,13 @@ import (
 	"github.com/revel/revel"
 )
 
-func GetCategories(displayAll bool, page, pageSize, tenantId, baseURL string) (categories []models.Category, err error) {
+func GetCategories(displayAll, showImages bool, page, pageSize, tenantId, baseURL string) (categories models.CategoryList, err error) {
 	headers := map[string]string{
 		"tenantId": tenantId,
 	}
 
 	showAll := strconv.FormatBool(displayAll)
-	// + "?page=" + page + "&pageSize=" + pageSize
-	url := fmt.Sprintf("%s/api/v1/catalog/categories?isDisplayed=%s&page=%s&pageSize=%s", baseURL, showAll, page, pageSize)
+	url := fmt.Sprintf("%s/api/v1/catalog/categories?isDisplayed=%v&showImages=%v&page=%s&pageSize=%s", baseURL, showAll, showImages, page, pageSize)
 	method := "GET"
 
 	body, status, err := clients.CallRestEndPoint(url, method, headers, nil)

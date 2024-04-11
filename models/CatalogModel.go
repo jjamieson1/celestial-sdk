@@ -227,15 +227,6 @@ type Review struct {
 	Score       string `json:"score"`
 }
 
-type SearchResult struct {
-	Name         string  `json:"name"`
-	Manufacturer string  `json:"manufacturer"`
-	Id           string  `json:"id"`
-	IsDisplayed  bool    `json:"isDisplayed"`
-	Image        string  `json:"image"`
-	Score        float64 `json:"score"`
-}
-
 type SaleCampaign struct {
 	Id                    string      `json:"id,omitempty"`
 	OnSale                bool        `json:"onSale"`
@@ -281,6 +272,7 @@ type MetaData struct {
 	Next       string `json:"next"`
 	Previous   string `json:"previous"`
 	Page       int    `json:"page"`
+	NumPages   int    `json:"numPages"`
 	PageItems  int    `json:"pageItems"`
 	Cache      Cache  `json:"cache"`
 }
