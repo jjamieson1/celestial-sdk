@@ -8,6 +8,7 @@ type Image struct {
 	Description      string    `json:"description,omitempty"`
 	Filename         string    `json:"filename,omitempty"`
 	Ordering         string    `json:"ordering,omitempty"`
+	IsDisplayed      bool      `json:"isDiplayed"`
 	PublicID         string    `json:"publicID,omitempty"`
 	BaseImageURL     string    `json:"baseImageURL,omitempty"`
 	Size             string    `json:"size,omitempty"`

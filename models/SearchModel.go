@@ -14,5 +14,6 @@ type CMSSearchResult struct {
 	Title     string  `json:"title"`
 	Body      string  `json:"body"`
 	ShortText string  `json:"shortText"`
+	TenantId  string  `json:"tenantId"`
 	Score     float64 `json:"score"`
 }
